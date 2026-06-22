@@ -1,0 +1,27 @@
+body {
+    background-color: #000000;
+    color: #00ff00;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#error-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+#rom-patcher-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.patcher-form {
+    margin: 2px;
+    font-weight: bold;
+}
