@@ -2,58 +2,101 @@ import { Patcher } from "./Patcher";
 
 
 export class PatcherDiv {
-    private readonly div: HTMLDivElement;
-    private readonly mainLabel: HTMLLabelElement;
-    private readonly romInput: HTMLInputElement;
-    private readonly romFilenameSpan: HTMLSpanElement;
-    private readonly selectRomButton: HTMLButtonElement;
-    private readonly patchRomButton: HTMLButtonElement;
+    private div!: HTMLDivElement;
+
+    private romSelectorDiv!: HTMLDivElement;
+    private romSelectorLabel!: HTMLLabelElement;
+    private romSelectorInput!: HTMLInputElement;
+    private romSelectorFilenameSpan!: HTMLSpanElement;
+    private romSelectorButton!: HTMLButtonElement;
+
+    private overrideDiv!: HTMLDivElement;
+    private overrideLabel!: HTMLLabelElement;
+    private overrideInput!: HTMLInputElement;
+
+    private submitDiv!: HTMLDivElement;
+    private patchRomButton!: HTMLButtonElement;
 
     public constructor() {
-        this.div = document.createElement("div");
-        this.div.id = "rom-patcher-div";
+        this.createROMSelectorDiv();
+        this.createOverrideDiv();
+        this.createSubmitDiv();
+        this.createContainerDiv();
+        this.addListeners();
+    }
 
-        this.mainLabel = document.createElement("label");
+    private createROMSelectorDiv(): void {
+        this.romSelectorDiv = document.createElement("div");
+        this.romSelectorDiv.id = "rom-selector-div";
 
-        this.mainLabel.className = "patcher-form";
-        this.mainLabel.htmlFor = "rom-input";
-        this.mainLabel.textContent = "Select your Final Fantasy V ROM file (.smc):";
+        this.romSelectorLabel = document.createElement("label");
+        this.romSelectorLabel.id = "rom-selector-label";
+        this.romSelectorLabel.classList.add("with-margin");
+        this.romSelectorLabel.htmlFor = "rom-selector-input";
+        this.romSelectorLabel.textContent = "Select your Final Fantasy V ROM file (.smc/.sfc):";
 
-        this.romInput = document.createElement("input");
+        this.romSelectorInput = document.createElement("input");
+        this.romSelectorInput.type = "file";
+        this.romSelectorInput.id = "rom-selector-input";
+        this.romSelectorInput.accept = ".smc,.sfc";
+        this.romSelectorInput.hidden = true;
 
-        this.romInput.className = "patcher-form";
-        this.romInput.id = "rom-input";
-        this.romInput.type = "file";
-        this.romInput.accept = ".smc";
-        this.romInput.hidden = true;
+        this.romSelectorFilenameSpan = document.createElement("span");
+        this.romSelectorFilenameSpan.id = "rom-selector-filename";
+        this.romSelectorFilenameSpan.classList.add("with-margin");
+        this.romSelectorFilenameSpan.textContent = "No ROM selected";
 
-        this.romFilenameSpan = document.createElement("span");
+        this.romSelectorButton = document.createElement("button");
+        this.romSelectorButton.id = "rom-selector-button";
+        this.romSelectorButton.textContent = "Select ROM";
 
-        this.romFilenameSpan.className = "patcher-form";
-        this.romFilenameSpan.id = "rom-filename";
-        this.romFilenameSpan.textContent = "No ROM selected";
+        this.romSelectorDiv.appendChild(this.romSelectorLabel);
+        this.romSelectorDiv.appendChild(this.romSelectorInput);
+        this.romSelectorDiv.appendChild(document.createElement("br"));
+        this.romSelectorDiv.appendChild(this.romSelectorFilenameSpan);
+        this.romSelectorDiv.appendChild(this.romSelectorButton);
+    }
 
-        this.selectRomButton = document.createElement("button");
+    private createOverrideDiv(): void {
+        this.overrideDiv = document.createElement("div");
+        this.overrideDiv.id = "override-div";
 
-        this.selectRomButton.className = "patcher-form";
-        this.selectRomButton.id = "select-rom-button";
-        this.selectRomButton.textContent = "Select ROM";
+        this.overrideLabel = document.createElement("label");
+        this.overrideLabel.classList.add("with-margin");
+        this.overrideLabel.htmlFor = "override-input";
+        this.overrideLabel.textContent = "Override the ROM hash check (use at your own risk):";
+
+        this.overrideInput = document.createElement("input");
+        this.overrideInput.classList.add("with-margin");
+        this.overrideInput.type = "checkbox";
+        this.overrideInput.id = "override-input";
+
+        this.overrideDiv.appendChild(this.overrideLabel);
+        this.overrideDiv.appendChild(this.overrideInput);
+    }
+
+    private createSubmitDiv(): void {
+        this.submitDiv = document.createElement("div");
+        this.submitDiv.id = "submit-div";
 
         this.patchRomButton = document.createElement("button");
-
-        this.patchRomButton.className = "patcher-form";
         this.patchRomButton.id = "patch-rom-button";
         this.patchRomButton.textContent = "Patch ROM";
         this.patchRomButton.disabled = true;
         this.patchRomButton.hidden = true;
 
-        this.div.appendChild(this.mainLabel);
-        this.div.appendChild(this.romInput);
-        this.div.appendChild(this.romFilenameSpan);
-        this.div.appendChild(this.selectRomButton);
-        this.div.appendChild(this.patchRomButton);
+        this.submitDiv.appendChild(this.patchRomButton);
+    }
 
-        this.addListeners();
+    private createContainerDiv(): void {
+        this.div = document.createElement("div");
+        this.div.id = "rom-patcher-div";
+
+        this.div.appendChild(this.romSelectorDiv);
+        this.div.appendChild(document.createElement("br"));
+        this.div.appendChild(this.overrideDiv);
+        this.div.appendChild(document.createElement("br"));
+        this.div.appendChild(this.submitDiv);
     }
 
     public getDiv(): HTMLDivElement {
@@ -67,35 +110,39 @@ export class PatcherDiv {
     }
 
     private addSelectRomButtonListener(): void {
-        this.selectRomButton.addEventListener("click", () => {
-            this.romInput.click();
+        this.romSelectorButton.addEventListener("click", () => {
+            this.romSelectorInput.click();
         });
     }
 
     private addRomInputChangeListener(): void {
         // When the file is selected, change the rom-filename span text to the name of the file
-        this.romInput.addEventListener("change", (event) => {
+        this.romSelectorInput.addEventListener("change", (event) => {
             const input: HTMLInputElement = event.target as HTMLInputElement;
             const file: File | undefined = input.files?.[0];
 
             if (file) {
-                this.romFilenameSpan.textContent = file.name;
-                this.selectRomButton.textContent = "Change ROM";
+                this.romSelectorFilenameSpan.textContent = file.name;
+                this.romSelectorButton.textContent = "Change ROM";
                 this.patchRomButton.disabled = false;
                 this.patchRomButton.hidden = false;
+
+                document.getElementById("error-div")?.classList.add("hidden");
             }
         });
     }
 
     private addPatchRomButtonListener(): void {
         this.patchRomButton.addEventListener("click", async () => {
-            const file: File | undefined = this.romInput.files?.[0];
+            const file: File | undefined = this.romSelectorInput.files?.[0];
 
             if (!file) {
                 const errorDiv: HTMLDivElement | null = document.getElementById("error-div") as HTMLDivElement | null;
                 
                 if (errorDiv) {
                     errorDiv.textContent = "Please select a ROM file first.";
+
+                    errorDiv.classList.remove("hidden");
                 }
 
                 return;
@@ -104,33 +151,58 @@ export class PatcherDiv {
             const romBytes: ArrayBuffer = await file.arrayBuffer();
             const patcher: Patcher = new Patcher(romBytes);
 
-            if (!(await patcher.validateRomHash())) {
+            const overrideHashCheck: boolean = this.overrideInput.checked;
+
+            if (!overrideHashCheck && !(await patcher.validateRomHash())) {
                 const errorDiv: HTMLDivElement | null = document.getElementById("error-div") as HTMLDivElement | null;
 
                 if (errorDiv) {
-                    errorDiv.textContent = "The selected ROM file is not a valid Final Fantasy V ROM.";
+                    errorDiv.textContent = "The selected ROM file is not a valid Final Fantasy V ROM (Original Japanese or RPGe 1.1).";
+
+                    errorDiv.classList.remove("hidden");
                 }
 
                 return;
             }
+
+            if (!(await patcher.checkRomMinimumSize())) {
+                const errorDiv: HTMLDivElement | null = document.getElementById("error-div") as HTMLDivElement | null;
+
+                if (errorDiv) {
+                    errorDiv.textContent = "The selected ROM file is too small to contain all enemy entries.";
+
+                    errorDiv.classList.remove("hidden");
+                }
+
+                return;
+            }
+
+            document.getElementById("error-div")?.classList.add("hidden");
 
             const patchedRomBytes: ArrayBuffer = await patcher.getPatchedRomBytes();
             const blob: Blob = new Blob([patchedRomBytes], { type: "application/octet-stream" });
             const url: string = URL.createObjectURL(blob);
             const a: HTMLAnchorElement = document.createElement("a");
 
-            const patchedRomFilename: string = file.name.replace(/\.sfc$/i, "_autohaste.sfc");
+            if (file.name.toLowerCase().endsWith(".smc")) {
+                a.download = file.name.replace(/\.smc$/i, "_autohaste.smc");
+            }
+            else if (file.name.toLowerCase().endsWith(".sfc")) {
+                a.download = file.name.replace(/\.sfc$/i, "_autohaste.sfc");
+            }
+            else {
+                a.download = "ffv_autohaste.smc";
+            }
 
             a.href = url;
-            a.download = patchedRomFilename;
 
             a.click();
 
             URL.revokeObjectURL(url);
 
-            this.romInput.value = "";
-            this.romFilenameSpan.textContent = "No ROM selected";
-            this.selectRomButton.textContent = "Select ROM";
+            this.romSelectorInput.value = "";
+            this.romSelectorFilenameSpan.textContent = "No ROM selected";
+            this.romSelectorButton.textContent = "Select ROM";
             this.patchRomButton.disabled = true;
             this.patchRomButton.hidden = true;
         });

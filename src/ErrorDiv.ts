@@ -6,7 +6,8 @@ export class ErrorDiv {
         this.div = document.createElement("div");
 
         this.div.id = "error-div";
-        this.div.hidden = true;
+
+        this.div.classList.add("hidden");
 
         this.messageSpan = document.createElement("span");
 
@@ -15,7 +16,7 @@ export class ErrorDiv {
 
         this.div.appendChild(this.messageSpan);
 
-        this.addHideOnClickOutsideListener();
+        this.addHideOnClickListener();
     }
 
     public getDiv(): HTMLDivElement {
@@ -25,15 +26,14 @@ export class ErrorDiv {
     public showError(message: string): void {
         this.messageSpan.textContent = message;
 
-        this.div.hidden = false;
+        this.div.classList.remove("hidden");
     }
 
-    private addHideOnClickOutsideListener(): void {
-        document.addEventListener("click", (event: MouseEvent) => {
-            if (!this.div.contains(event.target as Node)) {
-                this.div.hidden = true;
-                this.messageSpan.textContent = "";
-            }
+    private addHideOnClickListener(): void {
+        this.div.addEventListener("click", () => {
+            this.div.classList.add("hidden");
+
+            this.messageSpan.textContent = "";
         });
     }
 }

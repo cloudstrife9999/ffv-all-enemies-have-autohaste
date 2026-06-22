@@ -2,8 +2,7 @@ export class Patcher {
     private readonly romBytes: ArrayBuffer;
     private readonly expectedHashesList: string[] = [
         "c6858d5c02894a6cc71f4dd452c7f288b319d1952ca56fdb185b4bf5e26244a2",  // Japanese version
-        "d893dcc82d601887e2b3dd4ab8aa140a0bb032e4afca4721bff645bc7949feb1",  // RPGe English version
-        "084a6ce7330677a0d153d95a8cee3c0278ef1617e71e15e02fea289cc79f6461"  // Project Demi version
+        "d893dcc82d601887e2b3dd4ab8aa140a0bb032e4afca4721bff645bc7949feb1"   // RPGe English version
     ];
     private readonly firstEnemyEntryOffset: number;  // Offset for the first enemy entry in the ROM
     private readonly enemyEntrySize: number;  // Size of each enemy entry in bytes
@@ -34,6 +33,10 @@ export class Patcher {
         const romHash: string = await Patcher.calculateSha256Hash(this.romBytes);
 
         return this.expectedHashesList.includes(romHash);
+    }
+
+    public async checkRomMinimumSize(): Promise<boolean> {
+        return this.romBytes.byteLength >= this.firstEnemyEntryOffset + (this.enemyCount * this.enemyEntrySize);
     }
 
     private async patchEnemyStatuses(): Promise<void> {

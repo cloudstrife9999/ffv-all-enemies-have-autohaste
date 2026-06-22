@@ -7,21 +7,28 @@ body {
 }
 
 #error-div {
-    display: flex;
-    flex-direction: column;
+    color: #ff0000;
+    text-align: center;
     align-items: center;
     justify-content: center;
     font-weight: bold;
 }
 
-#rom-patcher-div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+#rom-selector-label {
+    text-align: center;
+    display: block;
 }
 
-.patcher-form {
-    margin: 2px;
+#rom-selector-div, #override-div, #submit-div {
+    text-align: center;
+    justify-content: center;
     font-weight: bold;
+}
+
+.with-margin {
+    margin: 5px;
+}
+
+.hidden {
+    display: none;
 }
