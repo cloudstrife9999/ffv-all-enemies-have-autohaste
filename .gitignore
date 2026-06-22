@@ -9,6 +9,3 @@ node_modules/
 !.yarn/versions
 
 *.bak
-
-package-lock.json
-yarn.lock
