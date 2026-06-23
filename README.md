@@ -16,7 +16,7 @@ This is a simple web-based tool that allows you to patch your Final Fantasy V RO
 ## How to Use
 
 1. Navigate to the [web-based tool](https://cloudstrife9999.github.io/ffv-all-enemies-have-autohaste/) in your web browser.
-2. Select your Final Fantasy V ROM file (`.smc`) by clicking the **Select ROM** button.
+2. Select your Final Fantasy V ROM file (`<whatever>.smc` or `<whatever>.sfc`) by clicking the **Select ROM** button.
 3. Click the **Patch ROM** button to apply the patch.
 4. Download the patched ROM file and use it to play the game with all enemies having Auto-Haste.
 

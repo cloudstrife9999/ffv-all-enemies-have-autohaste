@@ -1,6 +1,7 @@
 import { PatcherDiv } from "./PatcherDiv";
 import { ErrorDiv } from "./ErrorDiv";
 import { WelcomeDiv } from "./WelcomeDiv";
+import { InfoDiv } from "./InfoDiv";
 
 
 export class Main {
@@ -8,6 +9,7 @@ export class Main {
         Main.addErrorDiv();
         Main.addWelcomeDiv();
         Main.addPatcherDiv();
+        Main.addInfoDiv();
     }
 
     private static addPatcherDiv(): void {
@@ -40,6 +42,17 @@ export class Main {
         }
         else {
             console.error("Failed to create WelcomeDiv.");
+        }
+    }
+
+    private static addInfoDiv(): void {
+        const infoDiv: InfoDiv = new InfoDiv();
+
+        if (infoDiv) {
+            document.body.appendChild(infoDiv.getDiv());
+        }
+        else {
+            console.error("Failed to create InfoDiv.");
         }
     }
 }
