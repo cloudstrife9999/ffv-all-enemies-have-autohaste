@@ -9,6 +9,10 @@ body {
     margin: auto;
 }
 
+#welcome-div {
+    color: #00ffff;
+}
+
 #error-div {
     color: #ff0000;
     text-align: center;
@@ -28,10 +32,18 @@ body {
     font-weight: bold;
 }
 
+#info-link {
+    color: #00bfff;
+}
+
 .with-margin {
     margin: 5px;
 }
 
 .hidden {
     display: none;
+}
+
+.red-text {
+    color: #ff0000;
 }

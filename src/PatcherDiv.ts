@@ -43,7 +43,7 @@ export class PatcherDiv {
 
         this.romSelectorFilenameSpan = document.createElement("span");
         this.romSelectorFilenameSpan.id = "rom-selector-filename";
-        this.romSelectorFilenameSpan.classList.add("with-margin");
+        this.romSelectorFilenameSpan.classList.add("with-margin", "red-text");
         this.romSelectorFilenameSpan.textContent = "No ROM selected";
 
         this.romSelectorButton = document.createElement("button");
@@ -97,6 +97,7 @@ export class PatcherDiv {
         this.div.appendChild(this.overrideDiv);
         this.div.appendChild(document.createElement("br"));
         this.div.appendChild(this.submitDiv);
+        this.div.appendChild(document.createElement("br"));
     }
 
     public getDiv(): HTMLDivElement {
@@ -123,6 +124,9 @@ export class PatcherDiv {
 
             if (file) {
                 this.romSelectorFilenameSpan.textContent = file.name;
+
+                this.romSelectorFilenameSpan.classList.remove("red-text");
+
                 this.romSelectorButton.textContent = "Change ROM";
                 this.patchRomButton.disabled = false;
                 this.patchRomButton.hidden = false;
@@ -202,6 +206,9 @@ export class PatcherDiv {
 
             this.romSelectorInput.value = "";
             this.romSelectorFilenameSpan.textContent = "No ROM selected";
+
+            this.romSelectorFilenameSpan.classList.add("red-text");
+
             this.romSelectorButton.textContent = "Select ROM";
             this.patchRomButton.disabled = true;
             this.patchRomButton.hidden = true;
